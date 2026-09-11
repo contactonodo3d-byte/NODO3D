@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Site Access — Booth Preview</title>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --graphite: #1B1D21;
+    --panel: #24262B;
+    --panel-line: #3A3D43;
+    --paper: #F4F2ED;
+    --paper-dim: #A9A7A0;
+    --signal: #E38B2C;
+    --blueprint: #6E93B7;
+    --ok: #7BA88A;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--graphite);
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Archivo Expanded', sans-serif;
+    font-weight:700;
+    letter-spacing:0.2px;
+    margin:0;
+  }
+  button{font-family:inherit;}
+
+  /* ---------- ACCESS GATE ---------- */
+  #gate{
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    background:
+      linear-gradient(var(--graphite), var(--graphite)) padding-box,
+      repeating-linear-gradient(45deg, #000000 0 10px, #17181b 10px 20px) border-box;
+    z-index:10;
+  }
+  .gate-card{
+    width:100%; max-width:380px;
+    background: var(--panel);
+    border:1px solid var(--panel-line);
+    padding:36px 32px 32px;
+    position:relative;
+  }
+  .gate-card::before{
+    content:"";
+    position:absolute; top:14px; left:14px; right:14px; bottom:14px;
+    border:1px dashed #3E4046;
+    pointer-events:none;
+  }
+  .gate-tag{
+    color: var(--signal);
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .gate-card h1{ font-size:22px; line-height:1.3; margin-bottom:4px; }
+  .gate-sub{ color:var(--paper-dim); font-size:14px; margin-bottom:28px; }
+  .field-label{ font-size:12px; color:var(--paper-dim); margin-bottom:6px; display:block; }
+  #passcode{
+    width:100%;
+    background:#17181B;
+    border:1px solid var(--panel-line);
+    color:var(--paper);
+    padding:12px 14px;
+    font-size:16px;
+    letter-spacing:2px;
+    margin-bottom:14px;
+  }
+  #passcode:focus{ outline:none; border-color:var(--signal); }
+  .gate-btn{
+    width:100%;
+    background:var(--signal);
+    color:#1B1D21;
+    border:none;
+    padding:13px 14px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .gate-btn:hover{ background:#EF9A3C; }
+  .gate-error{
+    color:#D9765A;
+    font-size:13px;
+    margin-top:10px;
+    min-height:16px;
+  }
+
+  /* ---------- MAIN SITE ---------- */
+  #site{ display:none; }
+  #site.visible{ display:block; }
+
+  header{
+    padding:22px 24px 18px;
+    border-bottom:1px solid var(--panel-line);
+    display:flex; justify-content:space-between; align-items:flex-end;
+    gap:16px; flex-wrap:wrap;
+  }
+  header .project-name{ font-size:20px; }
+  header .meta{ color:var(--paper-dim); font-size:13px; text-align:right; line-height:1.5; }
+
+  .viewer-wrap{
+    position:relative;
+    height:56vh;
+    min-height:340px;
+  }
+  model-viewer{
+    position:absolute; inset:0;
+    width:100%;
+    height:100%;
+    background: linear-gradient(180deg,#26282D 0%, #1B1D21 100%);
+    --poster-color: transparent;
+  }
+  .load-msg{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--paper-dim);
+    font-size:13px;
+    pointer-events:none;
+    text-align:center;
+    padding:0 30px;
+  }
+  .ar-hint{
+    position:absolute; left:20px; bottom:20px;
+    background:rgba(27,29,33,0.85);
+    border:1px solid var(--panel-line);
+    padding:9px 14px;
+    font-size:12.5px;
+    color:var(--paper-dim);
+    max-width:240px;
+    pointer-events:none;
+    transition: opacity 0.6s ease;
+    opacity:1;
+  }
+  .ar-hint.hidden{ opacity:0; }
+
+  .spec-sheet{
+    padding:26px 24px 10px;
+    border-bottom:1px solid var(--panel-line);
+  }
+  .spec-sheet h2{ font-size:14px; color:var(--blueprint); margin-bottom:16px; }
+  .spec-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+    gap:0;
+  }
+  .spec-item{
+    padding:14px 18px 14px 0;
+    border-top:1px solid var(--panel-line);
+    padding-top:14px;
+  }
+  .spec-item .k{ font-size:12px; color:var(--paper-dim); margin-bottom:5px; }
+  .spec-item .v{ font-size:16px; font-weight:600; }
+
+  .actions{
+    padding:24px;
+    display:flex; gap:12px; flex-wrap:wrap;
+  }
+  .btn{
+    padding:13px 20px;
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+    border:1px solid var(--panel-line);
+    background:transparent;
+    color:var(--paper);
+    text-decoration:none;
+    display:inline-block;
+  }
+  .btn.primary{ background:var(--ok); border-color:var(--ok); color:#182018; }
+  .btn:hover{ border-color:var(--paper-dim); }
+  .btn.primary:hover{ background:#8CBB9C; }
+
+  footer{
+    padding:20px 24px 34px;
+    color:var(--paper-dim);
+    font-size:12.5px;
+    line-height:1.6;
+  }
+  footer strong{ color:var(--paper); }
+
+  @media (max-width:560px){
+    header{ flex-direction:column; align-items:flex-start; }
+    header .meta{ text-align:left; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ ACCESS GATE ============ -->
+  <div id="gate">
+    <div class="gate-card">
+      <div class="gate-tag">Site access</div>
+      <h1>Riverside Mall — Kiosk Concept</h1>
+      <div class="gate-sub">This preview was shared privately with you. Enter the code from your project email to continue.</div>
+      <span class="field-label">Access code</span>
+      <input id="passcode" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="off">
+      <button class="gate-btn" onclick="tryEnter()">Enter preview</button>
+      <div class="gate-error" id="gateError"></div>
+    </div>
+  </div>
+
+  <!-- ============ MAIN SITE ============ -->
+  <div id="site">
+    <header>
+      <div class="project-name">Riverside Mall — Kiosk Concept</div>
+      <div class="meta">Prepared for <strong style="color:#F4F2ED">Client Name</strong><br>Rev. 3 · Sept 2026</div>
+    </header>
+
+    <div class="viewer-wrap">
+      <model-viewer
+        id="viewer"
+        src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+        ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+        alt="Sample booth model — replace with your project's .glb and .usdz"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        camera-controls
+        auto-rotate
+        shadow-intensity="1"
+        exposure="0.9"
+      >
+        <button slot="ar-button" class="btn primary" style="position:absolute; bottom:20px; right:20px;">
+          View in your space
+        </button>
+      </model-viewer>
+      <div class="load-msg" id="loadMsg">Loading model…</div>
+      <div class="ar-hint" id="arHint">Drag to rotate · pinch to zoom · tap "View in your space" to place it at real scale, right where you're standing.</div>
+    </div>
+
+    <div class="spec-sheet">
+      <h2>Structure specs</h2>
+      <div class="spec-grid">
+        <div class="spec-item"><div class="k">Footprint</div><div class="v">6 × 4 m</div></div>
+        <div class="spec-item"><div class="k">Height</div><div class="v">3.2 m</div></div>
+        <div class="spec-item"><div class="k">Primary material</div><div class="v">Anodized aluminum frame</div></div>
+        <div class="spec-item"><div class="k">Cladding</div><div class="v">Printed tension fabric</div></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a class="btn primary" href="mailto:you@studio.com?subject=Approved%20—%20Riverside%20Mall%20Kiosk">Approve this design</a>
+      <a class="btn" href="mailto:you@studio.com?subject=Changes%20—%20Riverside%20Mall%20Kiosk">Request changes</a>
+    </div>
+
+    <footer>
+      Prepared by <strong>Your Studio Name</strong>. Model shown is for spatial preview only — final materials and finishes confirmed on build sheet.<br>
+      Questions? Reply to the email this link came with.
+    </footer>
+  </div>
+
+<script>
+  // NOTE: this is a lightweight deterrent, not real security — the code lives in this file.
+  // Anyone who inspects the page source can find it. Good enough for "don't forward this link
+  // casually," not for confidential IP.
+  const CORRECT_CODE = "482913";
+
+  function tryEnter(){
+    const input = document.getElementById('passcode').value.trim();
+    const err = document.getElementById('gateError');
+    if(input === CORRECT_CODE){
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('site').classList.add('visible');
+    } else {
+      err.textContent = "That code doesn't match. Check your project email and try again.";
+    }
+  }
+
+  document.getElementById('passcode').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') tryEnter();
+  });
+
+  const viewer = document.getElementById('viewer');
+  const loadMsg = document.getElementById('loadMsg');
+  const arHint = document.getElementById('arHint');
+
+  viewer.addEventListener('load', () => {
+    loadMsg.style.display = 'none';
+    setTimeout(() => arHint.classList.add('hidden'), 5000);
+  });
+  viewer.addEventListener('error', () => {
+    loadMsg.textContent = "Model didn't load — check the src/ios-src links, or your connection, and reload.";
+  });
+</script>
+
+</body>
+</html>
