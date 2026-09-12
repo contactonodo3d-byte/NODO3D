@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -36,6 +36,26 @@
     margin:0;
   }
   button{font-family:inherit;}
+  a{color:inherit;}
+
+  /* ---------- LANGUAGE TOGGLE ---------- */
+  .lang-toggle{
+    display:flex; gap:6px;
+  }
+  .lang-btn{
+    background:transparent;
+    border:1px solid var(--panel-line);
+    color:var(--paper-dim);
+    font-size:11.5px;
+    font-weight:600;
+    padding:5px 9px;
+    cursor:pointer;
+  }
+  .lang-btn.active{
+    color:var(--graphite);
+    background:var(--signal);
+    border-color:var(--signal);
+  }
 
   /* ---------- ACCESS GATE ---------- */
   #gate{
@@ -60,11 +80,14 @@
     border:1px dashed #3E4046;
     pointer-events:none;
   }
+  .gate-top{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:6px;
+  }
   .gate-tag{
     color: var(--signal);
     font-size:13px;
     font-weight:600;
-    margin-bottom:6px;
   }
   .gate-card h1{ font-size:22px; line-height:1.3; margin-bottom:4px; }
   .gate-sub{ color:var(--paper-dim); font-size:14px; margin-bottom:28px; }
@@ -76,8 +99,9 @@
     color:var(--paper);
     padding:12px 14px;
     font-size:16px;
-    letter-spacing:2px;
+    letter-spacing:4px;
     margin-bottom:14px;
+    text-align:center;
   }
   #passcode:focus{ outline:none; border-color:var(--signal); }
   .gate-btn{
@@ -105,11 +129,12 @@
   header{
     padding:22px 24px 18px;
     border-bottom:1px solid var(--panel-line);
-    display:flex; justify-content:space-between; align-items:flex-end;
+    display:flex; justify-content:space-between; align-items:flex-start;
     gap:16px; flex-wrap:wrap;
   }
-  header .project-name{ font-size:20px; }
+  header .project-name{ font-size:20px; margin-bottom:10px; }
   header .meta{ color:var(--paper-dim); font-size:13px; text-align:right; line-height:1.5; }
+  header .left-col{ display:flex; flex-direction:column; }
 
   .viewer-wrap{
     position:relative;
@@ -178,36 +203,53 @@
   .spec-item .k{ font-size:12px; color:var(--paper-dim); margin-bottom:5px; }
   .spec-item .v{ font-size:16px; font-weight:600; }
 
-  .actions{
-    padding:24px;
-    display:flex; gap:12px; flex-wrap:wrap;
+  .contact-sheet{
+    padding:26px 24px 8px;
+    border-bottom:1px solid var(--panel-line);
   }
-  .btn{
-    padding:13px 20px;
-    font-size:14.5px;
-    font-weight:600;
-    cursor:pointer;
+  .contact-sheet h2{ font-size:14px; color:var(--blueprint); margin-bottom:16px; }
+  .contact-links{
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .contact-link{
+    display:block;
+    padding:13px 16px;
     border:1px solid var(--panel-line);
-    background:transparent;
     color:var(--paper);
     text-decoration:none;
-    display:inline-block;
+    font-size:14.5px;
+    font-weight:500;
   }
-  .btn.primary{ background:var(--ok); border-color:var(--ok); color:#182018; }
-  .btn:hover{ border-color:var(--paper-dim); }
-  .btn.primary:hover{ background:#8CBB9C; }
+  .contact-link:hover{ border-color:var(--paper-dim); }
+
+  .social-row{
+    padding:18px 24px 26px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .social-row span{ font-size:12.5px; color:var(--paper-dim); }
+  .social-icon{
+    width:32px; height:32px;
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--panel-line);
+    color:var(--paper);
+  }
+  .social-icon:hover{ border-color:var(--paper-dim); }
+  .social-icon svg{ width:16px; height:16px; }
 
   footer{
     padding:20px 24px 34px;
     color:var(--paper-dim);
     font-size:12.5px;
     line-height:1.6;
+    border-top:1px solid var(--panel-line);
   }
   footer strong{ color:var(--paper); }
+  footer a{ text-decoration:underline; }
 
   @media (max-width:560px){
     header{ flex-direction:column; align-items:flex-start; }
     header .meta{ text-align:left; }
+    .gate-top{ flex-direction:column; gap:14px; }
   }
 </style>
 </head>
@@ -216,12 +258,19 @@
   <!-- ============ ACCESS GATE ============ -->
   <div id="gate">
     <div class="gate-card">
-      <div class="gate-tag">Site access</div>
+      <div class="gate-top">
+        <div class="gate-tag" data-i18n="gate.tag">Acceso al sitio</div>
+        <div class="lang-toggle">
+          <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">PT</button>
+        </div>
+      </div>
       <h1>Gestecner — Stand Navegestic</h1>
-      <div class="gate-sub">This preview was shared privately with you. Enter the code from your project email to continue.</div>
-      <span class="field-label">Access code</span>
-      <input id="passcode" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="off">
-      <button class="gate-btn" onclick="tryEnter()">Enter preview</button>
+      <div class="gate-sub" data-i18n="gate.sub">Esta vista previa fue compartida contigo de forma privada. Ingresa el código de tu email del proyecto para continuar.</div>
+      <span class="field-label" data-i18n="gate.fieldLabel">Código de acceso</span>
+      <input id="passcode" type="text" inputmode="numeric" maxlength="4" placeholder="0000" autocomplete="off">
+      <button class="gate-btn" data-i18n="gate.button" onclick="tryEnter()">Ingresar</button>
       <div class="gate-error" id="gateError"></div>
     </div>
   </div>
@@ -229,8 +278,15 @@
   <!-- ============ MAIN SITE ============ -->
   <div id="site">
     <header>
-      <div class="project-name">Gestecner — Stand Navegestic</div>
-      <div class="meta">Prepared for <strong style="color:#F4F2ED">Gestecner</strong><br>Rev. 1 · Sept 2026</div>
+      <div class="left-col">
+        <div class="project-name">Gestecner — Stand Navegestic</div>
+        <div class="meta" id="headerMeta" data-i18n-html="header.meta">Preparado para <strong style="color:#F4F2ED">Gestecner</strong><br>Rev. 1 · Sept 2026</div>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">PT</button>
+      </div>
     </header>
 
     <div class="viewer-wrap">
@@ -246,36 +302,44 @@
         shadow-intensity="1"
         exposure="0.9"
       >
-        <button slot="ar-button" class="btn primary" style="position:absolute; bottom:20px; right:20px;">
-          View in your space
+        <button slot="ar-button" class="btn primary" style="position:absolute; bottom:20px; right:20px; background:var(--ok); border:1px solid var(--ok); color:#182018; padding:13px 20px; font-weight:600; font-size:14.5px; cursor:pointer;" data-i18n="viewer.arButton">
+          Ver en tu espacio
         </button>
       </model-viewer>
-      <div class="load-msg" id="loadMsg">Loading model…</div>
-      <button class="help-btn" id="helpBtn" aria-label="How to use this viewer">?</button>
-      <div class="help-panel" id="helpPanel">
-        <strong>In this preview:</strong> drag to rotate · pinch to zoom · two fingers to pan.<br><br>
-        <strong>In "View in your space":</strong> tap the floor to place the booth · pinch to resize · twist with two fingers to rotate · drag to move it.
+      <div class="load-msg" id="loadMsg" data-i18n="viewer.loading">Cargando modelo…</div>
+      <button class="help-btn" id="helpBtn" aria-label="Ayuda">?</button>
+      <div class="help-panel" id="helpPanel" data-i18n-html="viewer.help">
+        <strong>En esta vista previa:</strong> arrastra para rotar · pellizca para hacer zoom · dos dedos para desplazar.<br><br>
+        <strong>En "Ver en tu espacio":</strong> toca el piso para ubicar el stand · pellizca para escalar · gira con dos dedos para rotar · arrastra para mover.
       </div>
     </div>
 
     <div class="spec-sheet">
-      <h2>Structure specs</h2>
+      <h2>Specs</h2>
       <div class="spec-grid">
-        <div class="spec-item"><div class="k">Footprint</div><div class="v">—</div></div>
-        <div class="spec-item"><div class="k">Height</div><div class="v">—</div></div>
-        <div class="spec-item"><div class="k">Primary material</div><div class="v">—</div></div>
-        <div class="spec-item"><div class="k">Cladding</div><div class="v">—</div></div>
+        <div class="spec-item"><div class="k" data-i18n="specs.developer">Desarrollador</div><div class="v">Grieta</div></div>
+        <div class="spec-item"><div class="k" data-i18n="specs.area">Área</div><div class="v">3m x 3m</div></div>
+        <div class="spec-item"><div class="k" data-i18n="specs.height">Altura</div><div class="v">3,20m</div></div>
       </div>
     </div>
 
-    <div class="actions">
-      <a class="btn primary" href="mailto:you@studio.com?subject=Approved%20—%20Gestecner%20Stand%20Navegestic">Approve this design</a>
-      <a class="btn" href="mailto:you@studio.com?subject=Changes%20—%20Gestecner%20Stand%20Navegestic">Request changes</a>
+    <div class="contact-sheet">
+      <h2 data-i18n="contact.title">Contacto</h2>
+      <div class="contact-links">
+        <a class="contact-link" href="mailto:grietapy@gmail.com" data-i18n="contact.email">📩 Correo: grietapy@gmail.com</a>
+        <a class="contact-link" href="https://wa.me/595981116856" data-i18n="contact.phone">📲 Llamada/WhatsApp: +595 981 116 856</a>
+      </div>
     </div>
 
-    <footer>
-      Prepared by <strong>Your Studio Name</strong>. Model shown is for spatial preview only — final materials and finishes confirmed on build sheet.<br>
-      Questions? Reply to the email this link came with.
+    <div class="social-row">
+      <span data-i18n="social.follow">Seguí a Grieta</span>
+      <a class="social-icon" href="https://www.instagram.com/grieta_py?stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener" aria-label="Instagram de Grieta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
+    </div>
+
+    <footer data-i18n-html="footer.disclaimer">
+      Powered by <strong><a href="#">Nodo3D</a></strong>. El modelo mostrado es solo para previsualización espacial — materiales y terminaciones finales se confirman en la ficha técnica de producción.
     </footer>
   </div>
 
@@ -283,7 +347,87 @@
   // NOTE: this is a lightweight deterrent, not real security — the code lives in this file.
   // Anyone who inspects the page source can find it. Good enough for "don't forward this link
   // casually," not for confidential IP.
-  const CORRECT_CODE = "719248";
+  const CORRECT_CODE = "7192";
+
+  const translations = {
+    es: {
+      "gate.tag": "Acceso al sitio",
+      "gate.sub": "Esta vista previa fue compartida contigo de forma privada. Ingresa el código de tu email del proyecto para continuar.",
+      "gate.fieldLabel": "Código de acceso",
+      "gate.button": "Ingresar",
+      "gate.error": "Ese código no coincide. Revisa tu email del proyecto e intenta de nuevo.",
+      "header.meta": 'Preparado para <strong style="color:#F4F2ED">Gestecner</strong><br>Rev. 1 · Sept 2026',
+      "viewer.arButton": "Ver en tu espacio",
+      "viewer.loading": "Cargando modelo…",
+      "viewer.loadError": "El modelo no cargó — revisa los enlaces src/ios-src o tu conexión, y recarga.",
+      "viewer.help": '<strong>En esta vista previa:</strong> arrastra para rotar · pellizca para hacer zoom · dos dedos para desplazar.<br><br><strong>En "Ver en tu espacio":</strong> toca el piso para ubicar el stand · pellizca para escalar · gira con dos dedos para rotar · arrastra para mover.',
+      "specs.developer": "Desarrollador",
+      "specs.area": "Área",
+      "specs.height": "Altura",
+      "contact.title": "Contacto",
+      "contact.email": "📩 Correo: grietapy@gmail.com",
+      "contact.phone": "📲 Llamada/WhatsApp: +595 981 116 856",
+      "social.follow": "Seguí a Grieta",
+      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. El modelo mostrado es solo para previsualización espacial — materiales y terminaciones finales se confirman en la ficha técnica de producción.'
+    },
+    en: {
+      "gate.tag": "Site access",
+      "gate.sub": "This preview was shared privately with you. Enter the code from your project email to continue.",
+      "gate.fieldLabel": "Access code",
+      "gate.button": "Enter preview",
+      "gate.error": "That code doesn't match. Check your project email and try again.",
+      "header.meta": 'Prepared for <strong style="color:#F4F2ED">Gestecner</strong><br>Rev. 1 · Sept 2026',
+      "viewer.arButton": "View in your space",
+      "viewer.loading": "Loading model…",
+      "viewer.loadError": "Model didn't load — check the src/ios-src links, or your connection, and reload.",
+      "viewer.help": '<strong>In this preview:</strong> drag to rotate · pinch to zoom · two fingers to pan.<br><br><strong>In "View in your space":</strong> tap the floor to place the booth · pinch to resize · twist with two fingers to rotate · drag to move it.',
+      "specs.developer": "Developer",
+      "specs.area": "Area",
+      "specs.height": "Height",
+      "contact.title": "Get in touch",
+      "contact.email": "📩 Email: grietapy@gmail.com",
+      "contact.phone": "📲 Call/WhatsApp: +595 981 116 856",
+      "social.follow": "Follow Grieta",
+      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. Model shown is for spatial preview only — final materials and finishes confirmed on the production build sheet.'
+    },
+    pt: {
+      "gate.tag": "Acesso ao site",
+      "gate.sub": "Esta prévia foi compartilhada com você de forma privada. Digite o código do e-mail do projeto para continuar.",
+      "gate.fieldLabel": "Código de acesso",
+      "gate.button": "Entrar",
+      "gate.error": "Esse código não corresponde. Verifique o e-mail do projeto e tente novamente.",
+      "header.meta": 'Preparado para <strong style="color:#F4F2ED">Gestecner</strong><br>Rev. 1 · Set 2026',
+      "viewer.arButton": "Ver no seu espaço",
+      "viewer.loading": "Carregando modelo…",
+      "viewer.loadError": "O modelo não carregou — verifique os links src/ios-src ou sua conexão, e recarregue.",
+      "viewer.help": '<strong>Nesta prévia:</strong> arraste para girar · belisque para zoom · dois dedos para mover.<br><br><strong>Em "Ver no seu espaço":</strong> toque no chão para posicionar o estande · belisque para redimensionar · gire com dois dedos para rotacionar · arraste para mover.',
+      "specs.developer": "Desenvolvedor",
+      "specs.area": "Área",
+      "specs.height": "Altura",
+      "contact.title": "Fale conosco",
+      "contact.email": "📩 E-mail: grietapy@gmail.com",
+      "contact.phone": "📲 Ligação/WhatsApp: +595 981 116 856",
+      "social.follow": "Siga a Grieta",
+      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. O modelo exibido é apenas para pré-visualização espacial — materiais e acabamentos finais são confirmados na ficha técnica de produção.'
+    }
+  };
+
+  let currentLang = "es";
+
+  function setLang(lang){
+    currentLang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if(translations[lang][key]) el.textContent = translations[lang][key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.dataset.i18nHtml;
+      if(translations[lang][key]) el.innerHTML = translations[lang][key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+  }
 
   function tryEnter(){
     const input = document.getElementById('passcode').value.trim();
@@ -292,7 +436,7 @@
       document.getElementById('gate').style.display = 'none';
       document.getElementById('site').classList.add('visible');
     } else {
-      err.textContent = "That code doesn't match. Check your project email and try again.";
+      err.textContent = translations[currentLang]["gate.error"];
     }
   }
 
@@ -313,8 +457,10 @@
     loadMsg.style.display = 'none';
   });
   viewer.addEventListener('error', () => {
-    loadMsg.textContent = "Model didn't load — check the src/ios-src links, or your connection, and reload.";
+    loadMsg.textContent = translations[currentLang]["viewer.loadError"];
   });
+
+  setLang('es');
 </script>
 
 </body>
