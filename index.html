@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Site Access — Booth Preview</title>
+<title>Site Access — Gestecner</title>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <style>
 
@@ -132,19 +132,33 @@
     text-align:center;
     padding:0 30px;
   }
-  .ar-hint{
+  .help-btn{
     position:absolute; left:20px; bottom:20px;
+    width:34px; height:34px;
+    border-radius:50%;
     background:rgba(27,29,33,0.85);
     border:1px solid var(--panel-line);
-    padding:9px 14px;
-    font-size:12.5px;
-    color:var(--paper-dim);
-    max-width:240px;
-    pointer-events:none;
-    transition: opacity 0.6s ease;
-    opacity:1;
+    color:var(--paper);
+    font-family:'Archivo Expanded', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
   }
-  .ar-hint.hidden{ opacity:0; }
+  .help-btn:hover{ border-color:var(--paper-dim); }
+  .help-panel{
+    position:absolute; left:20px; bottom:64px;
+    background:rgba(27,29,33,0.95);
+    border:1px solid var(--panel-line);
+    padding:14px 16px;
+    font-size:13px;
+    color:var(--paper-dim);
+    max-width:260px;
+    display:none;
+    line-height:1.6;
+  }
+  .help-panel.visible{ display:block; }
+  .help-panel strong{ color:var(--paper); }
 
   .spec-sheet{
     padding:26px 24px 10px;
@@ -203,7 +217,7 @@
   <div id="gate">
     <div class="gate-card">
       <div class="gate-tag">Site access</div>
-      <h1>Riverside Mall — Kiosk Concept</h1>
+      <h1>Gestecner — Stand Navegestic</h1>
       <div class="gate-sub">This preview was shared privately with you. Enter the code from your project email to continue.</div>
       <span class="field-label">Access code</span>
       <input id="passcode" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="off">
@@ -215,16 +229,16 @@
   <!-- ============ MAIN SITE ============ -->
   <div id="site">
     <header>
-      <div class="project-name">Riverside Mall — Kiosk Concept</div>
-      <div class="meta">Prepared for <strong style="color:#F4F2ED">Client Name</strong><br>Rev. 3 · Sept 2026</div>
+      <div class="project-name">Gestecner — Stand Navegestic</div>
+      <div class="meta">Prepared for <strong style="color:#F4F2ED">Gestecner</strong><br>Rev. 1 · Sept 2026</div>
     </header>
 
     <div class="viewer-wrap">
       <model-viewer
         id="viewer"
-        src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-        ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
-        alt="Sample booth model — replace with your project's .glb and .usdz"
+        src="model.glb"
+        ios-src="model.usdz"
+        alt="Gestecner Stand Navegestic booth"
         ar
         ar-modes="webxr scene-viewer quick-look"
         camera-controls
@@ -237,22 +251,26 @@
         </button>
       </model-viewer>
       <div class="load-msg" id="loadMsg">Loading model…</div>
-      <div class="ar-hint" id="arHint">Drag to rotate · pinch to zoom · tap "View in your space" to place it at real scale, right where you're standing.</div>
+      <button class="help-btn" id="helpBtn" aria-label="How to use this viewer">?</button>
+      <div class="help-panel" id="helpPanel">
+        <strong>In this preview:</strong> drag to rotate · pinch to zoom · two fingers to pan.<br><br>
+        <strong>In "View in your space":</strong> tap the floor to place the booth · pinch to resize · twist with two fingers to rotate · drag to move it.
+      </div>
     </div>
 
     <div class="spec-sheet">
       <h2>Structure specs</h2>
       <div class="spec-grid">
-        <div class="spec-item"><div class="k">Footprint</div><div class="v">6 × 4 m</div></div>
-        <div class="spec-item"><div class="k">Height</div><div class="v">3.2 m</div></div>
-        <div class="spec-item"><div class="k">Primary material</div><div class="v">Anodized aluminum frame</div></div>
-        <div class="spec-item"><div class="k">Cladding</div><div class="v">Printed tension fabric</div></div>
+        <div class="spec-item"><div class="k">Footprint</div><div class="v">—</div></div>
+        <div class="spec-item"><div class="k">Height</div><div class="v">—</div></div>
+        <div class="spec-item"><div class="k">Primary material</div><div class="v">—</div></div>
+        <div class="spec-item"><div class="k">Cladding</div><div class="v">—</div></div>
       </div>
     </div>
 
     <div class="actions">
-      <a class="btn primary" href="mailto:you@studio.com?subject=Approved%20—%20Riverside%20Mall%20Kiosk">Approve this design</a>
-      <a class="btn" href="mailto:you@studio.com?subject=Changes%20—%20Riverside%20Mall%20Kiosk">Request changes</a>
+      <a class="btn primary" href="mailto:you@studio.com?subject=Approved%20—%20Gestecner%20Stand%20Navegestic">Approve this design</a>
+      <a class="btn" href="mailto:you@studio.com?subject=Changes%20—%20Gestecner%20Stand%20Navegestic">Request changes</a>
     </div>
 
     <footer>
@@ -265,7 +283,7 @@
   // NOTE: this is a lightweight deterrent, not real security — the code lives in this file.
   // Anyone who inspects the page source can find it. Good enough for "don't forward this link
   // casually," not for confidential IP.
-  const CORRECT_CODE = "482913";
+  const CORRECT_CODE = "719248";
 
   function tryEnter(){
     const input = document.getElementById('passcode').value.trim();
@@ -284,11 +302,15 @@
 
   const viewer = document.getElementById('viewer');
   const loadMsg = document.getElementById('loadMsg');
-  const arHint = document.getElementById('arHint');
+  const helpBtn = document.getElementById('helpBtn');
+  const helpPanel = document.getElementById('helpPanel');
+
+  helpBtn.addEventListener('click', () => {
+    helpPanel.classList.toggle('visible');
+  });
 
   viewer.addEventListener('load', () => {
     loadMsg.style.display = 'none';
-    setTimeout(() => arHint.classList.add('hidden'), 5000);
   });
   viewer.addEventListener('error', () => {
     loadMsg.textContent = "Model didn't load — check the src/ios-src links, or your connection, and reload.";
