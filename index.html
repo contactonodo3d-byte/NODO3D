@@ -185,6 +185,39 @@
   .help-panel.visible{ display:block; }
   .help-panel strong{ color:var(--paper); }
 
+  .hotspot{
+    background:var(--blueprint);
+    color:#12181F;
+    font-size:11.5px;
+    font-weight:700;
+    padding:3px 8px;
+    border:1px solid #12181F;
+    white-space:nowrap;
+    transform:translate(-50%,-50%);
+  }
+  .measure-btn{
+    position:absolute; right:20px; top:20px;
+    background:rgba(27,29,33,0.85);
+    border:1px solid var(--panel-line);
+    color:var(--paper);
+    font-size:12px;
+    font-weight:600;
+    padding:8px 12px;
+    cursor:pointer;
+  }
+  .measure-btn.active{ border-color:var(--signal); color:var(--signal); }
+  .measure-readout{
+    position:absolute; right:20px; top:60px;
+    background:rgba(27,29,33,0.9);
+    border:1px solid var(--panel-line);
+    color:var(--paper-dim);
+    font-size:11.5px;
+    padding:8px 10px;
+    max-width:200px;
+    display:none;
+  }
+  .measure-readout.visible{ display:block; }
+
   .spec-sheet{
     padding:26px 24px 10px;
     border-bottom:1px solid var(--panel-line);
@@ -305,7 +338,21 @@
         <button slot="ar-button" class="btn primary" style="position:absolute; bottom:20px; right:20px; background:var(--ok); border:1px solid var(--ok); color:#182018; padding:13px 20px; font-weight:600; font-size:14.5px; cursor:pointer;" data-i18n="viewer.arButton">
           Ver en tu espacio
         </button>
+
+        <!-- PERMANENT DIMENSION LABELS (optional):
+             Once you know real coordinates on your model (use the Measure
+             button below to find them — tap a point and its position shows
+             in the readout), add fixed labels like this:
+
+        <button slot="hotspot-width" class="hotspot" data-position="0 0 0" data-normal="0 1 0">3m</button>
+
+             data-position is the X Y Z point on the model (in meters, from
+             its own center). One <button slot="hotspot-NAME"> per label,
+             each NAME must be unique. -->
+
       </model-viewer>
+      <button class="measure-btn" id="measureBtn" data-i18n="measure.button">📏 Medir</button>
+      <div class="measure-readout" id="measureReadout"></div>
       <div class="load-msg" id="loadMsg" data-i18n="viewer.loading">Cargando modelo…</div>
       <button class="help-btn" id="helpBtn" aria-label="Ayuda">?</button>
       <div class="help-panel" id="helpPanel" data-i18n-html="viewer.help">
@@ -368,7 +415,12 @@
       "contact.email": "📩 Correo: grietapy@gmail.com",
       "contact.phone": "📲 Llamada/WhatsApp: +595 981 116 856",
       "social.follow": "Seguí a Grieta",
-      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. El modelo mostrado es solo para previsualización espacial — materiales y terminaciones finales se confirman en la ficha técnica de producción.'
+      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. El modelo mostrado es solo para previsualización espacial — materiales y terminaciones finales se confirman en la ficha técnica de producción.',
+      "measure.button": "📏 Medir",
+      "measure.buttonActive": "📏 Medir (activo)",
+      "measure.tapFirst": "Tocá dos puntos sobre el modelo para medir la distancia entre ellos.",
+      "measure.distance": "Distancia",
+      "measure.point": "Punto"
     },
     en: {
       "gate.tag": "Site access",
@@ -388,7 +440,12 @@
       "contact.email": "📩 Email: grietapy@gmail.com",
       "contact.phone": "📲 Call/WhatsApp: +595 981 116 856",
       "social.follow": "Follow Grieta",
-      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. Model shown is for spatial preview only — final materials and finishes confirmed on the production build sheet.'
+      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. Model shown is for spatial preview only — final materials and finishes confirmed on the production build sheet.',
+      "measure.button": "📏 Measure",
+      "measure.buttonActive": "📏 Measure (active)",
+      "measure.tapFirst": "Tap two points on the model to measure the distance between them.",
+      "measure.distance": "Distance",
+      "measure.point": "Point"
     },
     pt: {
       "gate.tag": "Acesso ao site",
@@ -408,7 +465,12 @@
       "contact.email": "📩 E-mail: grietapy@gmail.com",
       "contact.phone": "📲 Ligação/WhatsApp: +595 981 116 856",
       "social.follow": "Siga a Grieta",
-      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. O modelo exibido é apenas para pré-visualização espacial — materiais e acabamentos finais são confirmados na ficha técnica de produção.'
+      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. O modelo exibido é apenas para pré-visualização espacial — materiais e acabamentos finais são confirmados na ficha técnica de produção.',
+      "measure.button": "📏 Medir",
+      "measure.buttonActive": "📏 Medir (ativo)",
+      "measure.tapFirst": "Toque em dois pontos do modelo para medir a distância entre eles.",
+      "measure.distance": "Distância",
+      "measure.point": "Ponto"
     }
   };
 
@@ -458,6 +520,53 @@
   });
   viewer.addEventListener('error', () => {
     loadMsg.textContent = translations[currentLang]["viewer.loadError"];
+  });
+
+  // ---------- MEASURE TOOL ----------
+  // Lets you tap two points directly on the model to see the real-world
+  // distance between them (in meters, since AR-ready models are exported
+  // at true scale). Also useful for finding coordinates to hardcode a
+  // permanent dimension hotspot later (see comment near the model-viewer tag).
+  const measureBtn = document.getElementById('measureBtn');
+  const measureReadout = document.getElementById('measureReadout');
+  let measureActive = false;
+  let firstPoint = null;
+
+  measureBtn.addEventListener('click', () => {
+    measureActive = !measureActive;
+    firstPoint = null;
+    measureBtn.classList.toggle('active', measureActive);
+    measureBtn.textContent = translations[currentLang][measureActive ? "measure.buttonActive" : "measure.button"];
+    measureReadout.classList.toggle('visible', measureActive);
+    if(measureActive){
+      measureReadout.textContent = translations[currentLang]["measure.tapFirst"];
+      viewer.cameraControls = false; // avoid dragging the view while measuring
+    } else {
+      viewer.cameraControls = true;
+    }
+  });
+
+  viewer.addEventListener('click', (event) => {
+    if(!measureActive) return;
+    const rect = viewer.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const hit = viewer.positionAndNormalFromPoint(x, y);
+    if(!hit){
+      measureReadout.textContent = translations[currentLang]["measure.tapFirst"];
+      return;
+    }
+    if(!firstPoint){
+      firstPoint = hit.position;
+      measureReadout.textContent = `${translations[currentLang]["measure.point"]} 1 ✓ — ${translations[currentLang]["measure.tapFirst"]}`;
+    } else {
+      const dx = hit.position.x - firstPoint.x;
+      const dy = hit.position.y - firstPoint.y;
+      const dz = hit.position.z - firstPoint.z;
+      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      measureReadout.textContent = `${translations[currentLang]["measure.distance"]}: ${dist.toFixed(2)} m`;
+      firstPoint = null;
+    }
   });
 
   setLang('es');
