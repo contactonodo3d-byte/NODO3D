@@ -10,14 +10,14 @@
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@600;700&family=Inter:wght@400;500;600&display=swap');
 
   :root{
-    --graphite: #1B1D21;
-    --panel: #24262B;
+    --graphite: #020E21;
+    --panel: #0F1B32;
     --panel-line: #3A3D43;
     --paper: #F4F2ED;
     --paper-dim: #A9A7A0;
-    --signal: #E38B2C;
-    --blueprint: #6E93B7;
-    --ok: #7BA88A;
+    --signal: #DC6574;
+    --blueprint: #91A7C3;
+    --ok: #91A7C3;
   }
 
   *{box-sizing:border-box;}
@@ -50,6 +50,7 @@
     font-weight:600;
     padding:5px 9px;
     cursor:pointer;
+    border-radius:6px;
   }
   .lang-btn.active{
     color:var(--graphite);
@@ -102,25 +103,39 @@
     letter-spacing:4px;
     margin-bottom:14px;
     text-align:center;
+    border-radius:8px;
   }
   #passcode:focus{ outline:none; border-color:var(--signal); }
   .gate-btn{
     width:100%;
     background:var(--signal);
-    color:#1B1D21;
+    color:#020E21;
     border:none;
     padding:13px 14px;
     font-size:15px;
     font-weight:600;
     cursor:pointer;
+    border-radius:8px;
   }
-  .gate-btn:hover{ background:#EF9A3C; }
+  .gate-btn:hover{ background:#E17E8D; }
   .gate-error{
     color:#D9765A;
     font-size:13px;
     margin-top:10px;
     min-height:16px;
   }
+  .powered-by{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    margin-top:24px;
+    font-size:11.5px;
+    color:var(--paper-dim);
+  }
+  .powered-by a{
+    display:flex; align-items:center;
+    text-decoration:none;
+  }
+  .powered-by svg{ height:22px; width:auto; }
+  footer .powered-by{ justify-content:flex-start; margin-top:0; margin-bottom:10px; }
 
   /* ---------- MAIN SITE ---------- */
   #site{ display:none; }
@@ -145,7 +160,7 @@
     position:absolute; inset:0;
     width:100%;
     height:100%;
-    background: linear-gradient(180deg,#26282D 0%, #1B1D21 100%);
+    background: linear-gradient(180deg,#16233F 0%, #020E21 100%);
     --poster-color: transparent;
   }
   .load-msg{
@@ -161,7 +176,7 @@
     position:absolute; left:20px; bottom:20px;
     width:34px; height:34px;
     border-radius:50%;
-    background:rgba(27,29,33,0.85);
+    background:rgba(2,14,33,0.85);
     border:1px solid var(--panel-line);
     color:var(--paper);
     font-family:'Archivo Expanded', sans-serif;
@@ -169,11 +184,12 @@
     font-size:15px;
     cursor:pointer;
     display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
   }
   .help-btn:hover{ border-color:var(--paper-dim); }
   .help-panel{
     position:absolute; left:20px; bottom:64px;
-    background:rgba(27,29,33,0.95);
+    background:rgba(2,14,33,0.95);
     border:1px solid var(--panel-line);
     padding:14px 16px;
     font-size:13px;
@@ -197,24 +213,26 @@
   }
   .measure-btn{
     position:absolute; right:20px; top:20px;
-    background:rgba(27,29,33,0.85);
+    background:rgba(2,14,33,0.85);
     border:1px solid var(--panel-line);
     color:var(--paper);
     font-size:12px;
     font-weight:600;
     padding:8px 12px;
     cursor:pointer;
+    border-radius:8px;
   }
   .measure-btn.active{ border-color:var(--signal); color:var(--signal); }
   .measure-readout{
     position:absolute; right:20px; top:60px;
-    background:rgba(27,29,33,0.9);
+    background:rgba(2,14,33,0.9);
     border:1px solid var(--panel-line);
     color:var(--paper-dim);
     font-size:11.5px;
     padding:8px 10px;
     max-width:200px;
     display:none;
+    border-radius:8px;
   }
   .measure-readout.visible{ display:block; }
 
@@ -245,15 +263,19 @@
     display:flex; flex-direction:column; gap:10px;
   }
   .contact-link{
-    display:block;
+    display:flex;
+    align-items:center;
+    gap:12px;
     padding:13px 16px;
     border:1px solid var(--panel-line);
     color:var(--paper);
     text-decoration:none;
     font-size:14.5px;
     font-weight:500;
+    border-radius:10px;
   }
   .contact-link:hover{ border-color:var(--paper-dim); }
+  .contact-link svg{ width:19px; height:19px; flex-shrink:0; color:var(--blueprint); }
 
   .social-row{
     padding:18px 24px 26px;
@@ -265,6 +287,7 @@
     display:flex; align-items:center; justify-content:center;
     border:1px solid var(--panel-line);
     color:var(--paper);
+    border-radius:50%;
   }
   .social-icon:hover{ border-color:var(--paper-dim); }
   .social-icon svg{ width:16px; height:16px; }
@@ -305,6 +328,21 @@
       <input id="passcode" type="text" inputmode="numeric" maxlength="4" placeholder="0000" autocomplete="off">
       <button class="gate-btn" data-i18n="gate.button" onclick="tryEnter()">Ingresar</button>
       <div class="gate-error" id="gateError"></div>
+      <div class="powered-by">
+        <span data-i18n="poweredBy">Powered by</span>
+        <a href="#" aria-label="Nodo3D">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 388.94 587.04">
+            <defs><style>.nodo-1{fill:#dc6574;}.nodo-2{fill:#91a7c3;}</style></defs>
+            <path class="nodo-2" d="M194.47,0L0,112.28v224.55l194.47,112.28,194.47-112.28V112.28L194.47,0ZM340.97,309.13l-146.5,84.58-47.49-27.42-99-57.16v-169.16L194.47,55.39l49,28.29-49,28.93,47.97,27.7v55.34l-95.46-55.45-47.97,27.75,47.97,27.7v170.64l47.49-29.01v-56.1l47.97,28.24,49.75-29.08V111.81l48.78,28.16v169.16Z"/>
+            <polygon class="nodo-1" points="194.47 393.71 194.47 449.11 0 336.83 0 112.28 47.98 139.97 47.98 309.13 99.01 338.59 99.01 167.95 146.98 195.65 146.98 366.29 194.47 393.71"/>
+            <path class="nodo-1" d="M194.47,112.61v55.34l47.97,27.7v-55.34l-47.97-27.7Z"/>
+            <path class="nodo-1" d="M19.36,586.24v-62.12l6.91.09,30.22,43.69v-43.69h8.86v62.04h-7.09l-29.95-43.34v43.34h-8.95Z"/>
+            <path class="nodo-1" d="M116.31,532.8c5.67-5.76,13.65-9.39,22.33-9.39s16.66,3.63,22.42,9.39c5.58,5.76,9.22,13.65,9.22,22.42s-3.63,16.66-9.22,22.42c-5.76,5.85-13.65,9.39-22.42,9.39s-16.66-3.54-22.33-9.39c-5.58-5.76-9.22-13.65-9.22-22.42s3.63-16.66,9.22-22.42ZM154.68,539.18c-4.17-4.17-9.93-6.74-16.04-6.74s-11.79,2.57-15.86,6.74c-4.08,4.08-6.65,9.75-6.65,16.04s2.57,11.96,6.65,16.04c4.08,4.17,9.75,6.74,15.86,6.74s11.88-2.57,16.04-6.74c3.99-4.08,6.56-9.66,6.56-16.04s-2.57-11.96-6.56-16.04Z"/>
+            <path class="nodo-1" d="M235.41,524.29c20.29,0,30.49,15.51,30.49,31.02s-10.19,30.93-30.49,30.93h-22.24v-61.95h22.24ZM235.41,577.29c14.36,0,21.62-10.99,21.62-21.98s-7.27-22.07-21.62-22.07h-13.29v44.05h13.29Z"/>
+            <path class="nodo-1" d="M315.61,532.8c5.67-5.76,13.65-9.39,22.33-9.39s16.66,3.63,22.42,9.39c5.58,5.76,9.22,13.65,9.22,22.42s-3.63,16.66-9.22,22.42c-5.76,5.85-13.65,9.39-22.42,9.39s-16.66-3.54-22.33-9.39c-5.58-5.76-9.22-13.65-9.22-22.42s3.63-16.66,9.22-22.42ZM353.98,539.18c-4.17-4.17-9.93-6.74-16.04-6.74s-11.79,2.57-15.86,6.74c-4.08,4.08-6.65,9.75-6.65,16.04s2.57,11.96,6.65,16.04c4.08,4.17,9.75,6.74,15.86,6.74s11.88-2.57,16.04-6.74c3.99-4.08,6.56-9.66,6.56-16.04s-2.57-11.96-6.56-16.04Z"/>
+          </svg>
+        </a>
+      </div>
     </div>
   </div>
 
@@ -335,7 +373,7 @@
         shadow-intensity="1"
         exposure="0.9"
       >
-        <button slot="ar-button" class="btn primary" style="position:absolute; bottom:20px; right:20px; background:var(--ok); border:1px solid var(--ok); color:#182018; padding:13px 20px; font-weight:600; font-size:14.5px; cursor:pointer;" data-i18n="viewer.arButton">
+        <button slot="ar-button" class="btn primary" style="position:absolute; bottom:20px; right:20px; background:var(--ok); border:1px solid var(--ok); color:#020E21; padding:13px 20px; font-weight:600; font-size:14.5px; cursor:pointer; border-radius:8px;" data-i18n="viewer.arButton">
           Ver en tu espacio
         </button>
 
@@ -373,8 +411,14 @@
     <div class="contact-sheet">
       <h2 data-i18n="contact.title">Contacto</h2>
       <div class="contact-links">
-        <a class="contact-link" href="mailto:grietapy@gmail.com" data-i18n="contact.email">📩 Correo: grietapy@gmail.com</a>
-        <a class="contact-link" href="https://wa.me/595981116856" data-i18n="contact.phone">📲 Llamada/WhatsApp: +595 981 116 856</a>
+        <a class="contact-link" href="mailto:grietapy@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 6.5l9 6.5 9-6.5"/></svg>
+          <span>grietapy@gmail.com</span>
+        </a>
+        <a class="contact-link" href="https://wa.me/595981116856">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.28-1.38a9.9 9.9 0 0 0 4.76 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.13.11-1.82-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.15.46.13.63-.08.17-.2.72-.84.91-1.13.19-.29.39-.24.65-.14.27.1 1.69.8 1.98.94.29.15.48.22.55.34.07.13.07.72-.17 1.4z"/></svg>
+          <span>+595 981 116 856</span>
+        </a>
       </div>
     </div>
 
@@ -385,8 +429,23 @@
       </a>
     </div>
 
-    <footer data-i18n-html="footer.disclaimer">
-      Powered by <strong><a href="#">Nodo3D</a></strong>. El modelo mostrado es solo para previsualización espacial — materiales y terminaciones finales se confirman en la ficha técnica de producción.
+    <footer>
+      <div class="powered-by">
+        <span data-i18n="poweredBy">Powered by</span>
+        <a href="#" aria-label="Nodo3D">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 388.94 587.04">
+            <defs><style>.nodo-1{fill:#dc6574;}.nodo-2{fill:#91a7c3;}</style></defs>
+            <path class="nodo-2" d="M194.47,0L0,112.28v224.55l194.47,112.28,194.47-112.28V112.28L194.47,0ZM340.97,309.13l-146.5,84.58-47.49-27.42-99-57.16v-169.16L194.47,55.39l49,28.29-49,28.93,47.97,27.7v55.34l-95.46-55.45-47.97,27.75,47.97,27.7v170.64l47.49-29.01v-56.1l47.97,28.24,49.75-29.08V111.81l48.78,28.16v169.16Z"/>
+            <polygon class="nodo-1" points="194.47 393.71 194.47 449.11 0 336.83 0 112.28 47.98 139.97 47.98 309.13 99.01 338.59 99.01 167.95 146.98 195.65 146.98 366.29 194.47 393.71"/>
+            <path class="nodo-1" d="M194.47,112.61v55.34l47.97,27.7v-55.34l-47.97-27.7Z"/>
+            <path class="nodo-1" d="M19.36,586.24v-62.12l6.91.09,30.22,43.69v-43.69h8.86v62.04h-7.09l-29.95-43.34v43.34h-8.95Z"/>
+            <path class="nodo-1" d="M116.31,532.8c5.67-5.76,13.65-9.39,22.33-9.39s16.66,3.63,22.42,9.39c5.58,5.76,9.22,13.65,9.22,22.42s-3.63,16.66-9.22,22.42c-5.76,5.85-13.65,9.39-22.42,9.39s-16.66-3.54-22.33-9.39c-5.58-5.76-9.22-13.65-9.22-22.42s3.63-16.66,9.22-22.42ZM154.68,539.18c-4.17-4.17-9.93-6.74-16.04-6.74s-11.79,2.57-15.86,6.74c-4.08,4.08-6.65,9.75-6.65,16.04s2.57,11.96,6.65,16.04c4.08,4.17,9.75,6.74,15.86,6.74s11.88-2.57,16.04-6.74c3.99-4.08,6.56-9.66,6.56-16.04s-2.57-11.96-6.56-16.04Z"/>
+            <path class="nodo-1" d="M235.41,524.29c20.29,0,30.49,15.51,30.49,31.02s-10.19,30.93-30.49,30.93h-22.24v-61.95h22.24ZM235.41,577.29c14.36,0,21.62-10.99,21.62-21.98s-7.27-22.07-21.62-22.07h-13.29v44.05h13.29Z"/>
+            <path class="nodo-1" d="M315.61,532.8c5.67-5.76,13.65-9.39,22.33-9.39s16.66,3.63,22.42,9.39c5.58,5.76,9.22,13.65,9.22,22.42s-3.63,16.66-9.22,22.42c-5.76,5.85-13.65,9.39-22.42,9.39s-16.66-3.54-22.33-9.39c-5.58-5.76-9.22-13.65-9.22-22.42s3.63-16.66,9.22-22.42ZM353.98,539.18c-4.17-4.17-9.93-6.74-16.04-6.74s-11.79,2.57-15.86,6.74c-4.08,4.08-6.65,9.75-6.65,16.04s2.57,11.96,6.65,16.04c4.08,4.17,9.75,6.74,15.86,6.74s11.88-2.57,16.04-6.74c3.99-4.08,6.56-9.66,6.56-16.04s-2.57-11.96-6.56-16.04Z"/>
+          </svg>
+        </a>
+      </div>
+      <div data-i18n-html="footer.disclaimer">El modelo mostrado es solo para previsualización espacial — materiales y terminaciones finales se confirman en la ficha técnica de producción.</div>
     </footer>
   </div>
 
@@ -412,10 +471,9 @@
       "specs.area": "Área",
       "specs.height": "Altura",
       "contact.title": "Contacto",
-      "contact.email": "📩 Correo: grietapy@gmail.com",
-      "contact.phone": "📲 Llamada/WhatsApp: +595 981 116 856",
       "social.follow": "Seguí a Grieta",
-      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. El modelo mostrado es solo para previsualización espacial — materiales y terminaciones finales se confirman en la ficha técnica de producción.',
+      "footer.disclaimer": 'El modelo mostrado es solo para previsualización espacial — materiales y terminaciones finales se confirman en la ficha técnica de producción.',
+      "poweredBy": "Powered by",
       "measure.button": "📏 Medir",
       "measure.buttonActive": "📏 Medir (activo)",
       "measure.tapFirst": "Tocá dos puntos sobre el modelo para medir la distancia entre ellos.",
@@ -437,10 +495,9 @@
       "specs.area": "Area",
       "specs.height": "Height",
       "contact.title": "Get in touch",
-      "contact.email": "📩 Email: grietapy@gmail.com",
-      "contact.phone": "📲 Call/WhatsApp: +595 981 116 856",
       "social.follow": "Follow Grieta",
-      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. Model shown is for spatial preview only — final materials and finishes confirmed on the production build sheet.',
+      "footer.disclaimer": 'Model shown is for spatial preview only — final materials and finishes confirmed on the production build sheet.',
+      "poweredBy": "Powered by",
       "measure.button": "📏 Measure",
       "measure.buttonActive": "📏 Measure (active)",
       "measure.tapFirst": "Tap two points on the model to measure the distance between them.",
@@ -462,10 +519,9 @@
       "specs.area": "Área",
       "specs.height": "Altura",
       "contact.title": "Fale conosco",
-      "contact.email": "📩 E-mail: grietapy@gmail.com",
-      "contact.phone": "📲 Ligação/WhatsApp: +595 981 116 856",
       "social.follow": "Siga a Grieta",
-      "footer.disclaimer": 'Powered by <strong><a href="#">Nodo3D</a></strong>. O modelo exibido é apenas para pré-visualização espacial — materiais e acabamentos finais são confirmados na ficha técnica de produção.',
+      "footer.disclaimer": 'O modelo exibido é apenas para pré-visualização espacial — materiais e acabamentos finais são confirmados na ficha técnica de produção.',
+      "poweredBy": "Powered by",
       "measure.button": "📏 Medir",
       "measure.buttonActive": "📏 Medir (ativo)",
       "measure.tapFirst": "Toque em dois pontos do modelo para medir a distância entre eles.",
